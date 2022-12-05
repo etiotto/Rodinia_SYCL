@@ -7,7 +7,7 @@ DEVICE      = gpu
 MATRIX_DIR = ./meschach_lib
 
 # Standard flags
-CFLAGS := -std=c++11 -Wall -I$(MATRIX_DIR)
+override CFLAGS += -std=c++17 -Wall -I$(MATRIX_DIR)
 
 # Linker flags
 LDFLAGS = -lm
@@ -15,34 +15,33 @@ LDFLAGS = -lm
 # Codeplay Compiler
 ifneq (,$(findstring codeplay,$(VENDOR)))
   CC = compute++
-  CFLAGS += -no-serial-memop -sycl -sycl-driver
+  override CFLAGS += -no-serial-memop -sycl -sycl-driver
   LDFLAGS += -lComputeCpp
 endif
 
 # Intel DPC++ Compiler
 ifneq (,$(findstring intel,$(VENDOR)))
-  CC = dpcpp
-  CFLAGS += 
+  override CFLAGS += 
   LDFLAGS += 
 endif
 
 # Debug Flags
 ifeq ($(DEBUG),yes)
-  CFLAGS += -g  
+  override CFLAGS += -g  
 endif
 
 ifeq ($(DEBUG),yes)
-  CFLAGS += -g  
+  override CFLAGS += -g  
   OUTPUT = -DOUTPUT
 endif
 
 # Optimization Flags
 ifeq ($(OPTIMIZE),yes)
-  CFLAGS += -O3
+  override CFLAGS += -O3
 endif
 
 ifeq ($(DEVICE),gpu)
-  CFLAGS +=-DUSE_GPU
+  override CFLAGS +=-DUSE_GPU
 endif
 
 
